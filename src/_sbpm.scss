@@ -16,7 +16,7 @@
 ) {
   // set custom props for base values
   @each $prop, $value-map in $custom-properties {
-    @include setPropMatching(regular, $prop, $value-map);
+    @include setPropMatching($base-name, $prop, $value-map);
   }
 
   // set custom props using min-width media queries
