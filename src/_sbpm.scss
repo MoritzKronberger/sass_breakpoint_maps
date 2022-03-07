@@ -1,0 +1,42 @@
+// if exists set custom property matching the given breakpoint
+@mixin setPropMatching($breakpoint, $prop, $value-map) {
+  @each $size, $value in $value-map {
+    @if $size == $breakpoint {
+      --#{$prop}: #{$value};
+    }
+  }
+}
+
+// create media queries and set custom properties
+@mixin loadBreakpoints(
+  $custom-properties,
+  $breakpoints,
+  $mobile-first: true,
+  $base-name: regular
+) {
+  // set custom props for base values
+  @each $prop, $value-map in $custom-properties {
+    @include setPropMatching(regular, $prop, $value-map);
+  }
+
+  // set custom props using min-width media queries
+  @if $mobile-first {
+    @each $breakpoint, $size in $breakpoints {
+      @media only screen and (min-width: $size) {
+        @each $prop, $value-map in $custom-properties {
+          @include setPropMatching($breakpoint, $prop, $value-map);
+        }
+      }
+    }
+  }
+  // set custom props using max-width media queries
+  @else {
+    @each $breakpoint, $size in $breakpoints {
+      @media only screen and (max-width: $size) {
+        @each $prop, $value-map in $custom-properties {
+          @include setPropMatching($breakpoint, $prop, $value-map);
+        }
+      }
+    }
+  }
+}

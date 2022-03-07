@@ -1,0 +1,27 @@
+@use 'sass:map';
+@use './sbpm.scss';
+
+.test {
+  width: 100%;
+}
+
+$breaking_props: (
+  margin-top: (
+    regular: 1rem,
+    tablet: 0.5rem,
+    mobile: 0.2rem
+  ),
+  margin-bottom: (
+      regular: calc(var(--base) * 2rem)
+  )
+);
+
+$breakpoints: (
+  tablet: 1060px,
+  mobile: 870px
+);
+
+:root {
+    @include sbpm.loadBreakpoints($breaking_props, $breakpoints, $mobile-first: false);
+}
+
