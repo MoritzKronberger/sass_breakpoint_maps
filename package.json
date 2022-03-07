@@ -1,6 +1,6 @@
 {
   "name": "sass-breakpoint-maps",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A minimal SASS library for organizing media query breakpoints using CSS custom properties",
   "repository": {
     "type": "git",
