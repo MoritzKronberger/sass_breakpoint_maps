@@ -1,6 +1,12 @@
-# Sass Breakpoint Maps
+# sass-breakpoint-maps
 
 A minimal Sass library for decluttering your media queries using Sass maps and CSS custom properties
+
+## About
+
+sass-breakpoint-maps allows you to define all css properties that should respond to one or more breakpoints in a single, concise Sass Map.
+
+After calling a single mixin they can be referenced as regular CSS custom properties throughout your entire project.
 
 ## Installation
 
@@ -17,18 +23,22 @@ Import into your Sass file with:
 
 ## Usage
 
-Define a Sass map containing your project's breakpoints (Both the map and property names can be changed freely):
+Define a Sass map containing your project's breakpoints, both the map and breakpoint names can be changed freely:
 
 ```scss
+@use 'sass:map';
+
 $breakpoints: (
   tablet: 1060px,
   mobile: 870px
 );
 ```
 
-Define a Sass map containing the custom properties and their desired values at the breakpoints, as well as a base value (The map name can be changed freely):
+Define a Sass map containing the custom properties and their desired values at the breakpoints, as well as a base value (in this case `regular`):
 
 ```scss
+@use 'sass:map';
+
 $custom-properties: (
   margin-top: (
     regular: 1rem,
@@ -54,6 +64,23 @@ Call the `create-breakpoints` mixin within your application's `:root` tags:
 }
 ```
 
+You can then reference your custom properties like usual:
+
+```scss
+.foo {
+  margin-top: var(--margin-top);
+}
+```
+
+## Configuring create-breakpoints
+
+| Argument           | Type     | Optional | Default |
+| ------------------ | -------- | -------- | --------|
+| $custom-properties | sass:map | false    | -- |
+| $breakpoints       | sass:map | false    | -- |
+| $mobile-first      | boolean  | true     | true |
+| $base-name         | string   | true     | regular |
+
 **Media Queries are set up mobile first by default** (using `min-width`), this can be overridden in the mixin:
 
 ```scss
@@ -62,7 +89,7 @@ Call the `create-breakpoints` mixin within your application's `:root` tags:
 }
 ```
 
-`regular` is the default name for the base value, but can be changed when calling the mixin, too:
+`regular` is the default name for the base value, but can also be changed when calling the mixin:
 
 ```scss
 $custom-properties: (
@@ -83,13 +110,5 @@ $custom-properties: (
 
 :root {
   @include sbpm.create-breakpoints($custom-properties, $breakpoints, $base-name: m);
-}
-```
-
-You can then reference your custom properties like usual:
-
-```scss
-.foo {
-  margin-top: var(--margin-top);
 }
 ```
