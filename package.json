@@ -9,7 +9,7 @@
   "main": "src/_sbpm.scss",
   "scripts": {
     "compile": "sass src/main.scss css/main.css",
-    "compile-test": "sass test/main.scss test/css/main.css"
+    "test": "jest"
   },
   "keywords": [
     "sass",
@@ -21,6 +21,7 @@
   "author": "Moritz Kronberger",
   "license": "MIT",
   "devDependencies": {
+    "jest": "^27.5.1",
     "sass": "^1.49.9",
     "sass-true": "^6.1.0"
   }
