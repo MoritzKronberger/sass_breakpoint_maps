@@ -1,14 +1,31 @@
 @use 'sass:map';
 @use '../node_modules/sass-breakpoint-maps/src/sbpm';
+@use '../node_modules/sass-true' as *;
 
-$breaking_props: (
+$prop-only-root: (
+  margin-top: (
+    regular: 1rem
+  )
+);
+
+$prop-only-tablet: (
   margin-top: (
     regular: 1rem,
-    tablet: 0.5rem,
-    mobile: 0.2rem
-  ),
-  margin-bottom: (
-      regular: calc(var(--base) * 2rem)
+    tablet: 2rem
+  )
+);
+
+$prop-full: (
+  margin-top: (
+    regular: 1rem,
+    tablet: 2rem,
+    mobile: 3rem
+  )
+);
+
+$prop-non-standard-base: (
+  margin-top: (
+    base: 1rem
   )
 );
 
@@ -17,7 +34,258 @@ $breakpoints: (
   mobile: 870px
 );
 
-:root {
-    @include sbpm.loadBreakpoints($breaking_props, $breakpoints, $mobile-first: false);
-}
+$props-full-equal: (
+  margin-top: (
+    regular: 1rem,
+    tablet: 2rem,
+    mobile: 3rem
+  ),
+  padding-top: (
+    regular: 2rem,
+    tablet: 3rem,
+    mobile: 1rem
+  ),
+  grid-gap: (
+    regular: 7px,
+    tablet: 10%,
+    mobile: 5em
+  ),
+);
 
+$props-full-non-equal: (
+  margin-top: (
+    regular: 1rem,
+    tablet: 2rem,
+    mobile: 3rem
+  ),
+  padding-top: (
+    regular: 2rem,
+    mobile: 1rem
+  ),
+  grid-gap: (
+    regular: 7px,
+    tablet: 10%
+  ),
+);
+
+$prop-sass-calc: (
+  margin-top: (
+    regular: 1rem * 2
+  )
+);
+
+$prop-css-calc: (
+  margin-top: (
+    regular: calc(1rem * 2 - 100% + var(--test-variable))
+  )
+);
+
+@include describe('loadBreakpoints mixin') {
+  @include it('Outputs a single margin-top custom property in the root tag') {
+    @include assert {
+      @include output {
+        :root {
+          @include sbpm.loadBreakpoints($prop-only-root, $breakpoints);
+        }
+      }
+
+      @include expect {
+        :root {
+          --margin-top: 1rem;
+        }
+      }
+    }
+  }
+
+  @include it('Outputs a margin-top custom property in the root tag and adds a tablet media query at 1060px') {
+    @include assert {
+      @include output {
+        :root {
+          @include sbpm.loadBreakpoints($prop-only-tablet, $breakpoints);
+        }
+      }
+
+      @include expect {
+        :root {
+          --margin-top: 1rem;
+        }
+   
+        @media only screen and (min-width: 1060px) {
+          :root {
+            --margin-top: 2rem;
+          }
+        }
+      }
+    }
+  }
+
+  @include it('Outputs a margin-top custom property in the root tag and adds a tablet media query at 1060px and a mobile query at 870px') {
+    @include assert {
+      @include output {
+        :root {
+          @include sbpm.loadBreakpoints($prop-full, $breakpoints);
+        }
+      }
+
+      @include expect {
+        :root {
+          --margin-top: 1rem;
+        }
+   
+        @media only screen and (min-width: 1060px) {
+          :root {
+            --margin-top: 2rem;
+          }
+        }
+
+        @media only screen and (min-width: 870px) {
+          :root {
+            --margin-top: 3rem;
+          }
+        }
+      }
+    }
+  }
+
+  @include it('Outputs desktop first media queries for the margin-top custom property') {
+    @include assert {
+      @include output {
+        :root {
+          @include sbpm.loadBreakpoints($prop-full, $breakpoints, $mobile-first: false);
+        }
+      }
+
+      @include expect {
+        :root {
+          --margin-top: 1rem;
+        }
+   
+        @media only screen and (max-width: 1060px) {
+          :root {
+            --margin-top: 2rem;
+          }
+        }
+
+        @media only screen and (max-width: 870px) {
+          :root {
+            --margin-top: 3rem;
+          }
+        }
+      }
+    }
+  }
+
+  @include it('Outputs a single margin-top custom property in the root tag using a non standard base name') {
+    @include assert {
+      @include output {
+        :root {
+          @include sbpm.loadBreakpoints($prop-non-standard-base, $breakpoints, $base-name: base);
+        }
+      }
+
+      @include expect {
+        :root {
+          --margin-top: 1rem;
+        }
+      }
+    }
+  }
+
+  @include it('Creates mobile first media queries for multiple custom properties (all sizes used)') {
+    @include assert {
+      @include output {
+        :root {
+          @include sbpm.loadBreakpoints($props-full-equal, $breakpoints);
+        }
+      }
+
+      @include expect {
+        :root {
+          --margin-top: 1rem;
+          --padding-top: 2rem;
+          --grid-gap: 7px;
+        }
+   
+        @media only screen and (min-width: 1060px) {
+          :root {
+            --margin-top: 2rem;
+            --padding-top: 3rem;
+            --grid-gap: 10%;
+          }
+        }
+
+        @media only screen and (min-width: 870px) {
+          :root {
+            --margin-top: 3rem;
+            --padding-top: 1rem;
+            --grid-gap: 5em;
+          }
+        }
+      }
+    }
+  }
+
+  @include it('Creates mobile first media queries for multiple custom properties (not all sizes used with all properties)') {
+    @include assert {
+      @include output {
+        :root {
+          @include sbpm.loadBreakpoints($props-full-non-equal, $breakpoints);
+        }
+      }
+
+      @include expect {
+        :root {
+          --margin-top: 1rem;
+          --padding-top: 2rem;
+          --grid-gap: 7px;
+        }
+   
+        @media only screen and (min-width: 1060px) {
+          :root {
+            --margin-top: 2rem;
+            --grid-gap: 10%;
+          }
+        }
+
+        @media only screen and (min-width: 870px) {
+          :root {
+            --margin-top: 3rem;
+            --padding-top: 1rem;
+          }
+        }
+      }
+    }
+  }
+
+  @include it('Mixin allows for SASS calculations') {
+    @include assert {
+      @include output {
+        :root {
+          @include sbpm.loadBreakpoints($prop-sass-calc, $breakpoints);
+        }
+      }
+
+      @include expect {
+        :root {
+          --margin-top: 2rem;
+        }
+      }
+    }
+  }
+
+  @include it('Mixin allows for CSS calc()') {
+    @include assert {
+      @include output {
+        :root {
+          @include sbpm.loadBreakpoints($prop-css-calc, $breakpoints);
+        }
+      }
+
+      @include expect {
+        :root {
+          --margin-top: calc(2rem - 100% + var(--test-variable));
+        }
+      }
+    }
+  }
+}
