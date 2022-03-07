@@ -1,5 +1,5 @@
 @use 'sass:map';
-@use '../node_modules/sass-breakpoint-maps/src/sbpm';
+@use '../node_modules/sass-breakpoint-maps' as sbpm;
 @use '../node_modules/sass-true' as *;
 
 $prop-only-root: (
@@ -27,11 +27,6 @@ $prop-non-standard-base: (
   margin-top: (
     base: 1rem
   )
-);
-
-$breakpoints: (
-  tablet: 1060px,
-  mobile: 870px
 );
 
 $props-full-equal: (
@@ -80,12 +75,17 @@ $prop-css-calc: (
   )
 );
 
+$breakpoints: (
+  tablet: 1060px,
+  mobile: 870px
+);
+
 @include describe('loadBreakpoints mixin') {
   @include it('Outputs a single margin-top custom property in the root tag') {
     @include assert {
       @include output {
         :root {
-          @include sbpm.loadBreakpoints($prop-only-root, $breakpoints);
+          @include sbpm.create-breakpoints($prop-only-root, $breakpoints);
         }
       }
 
@@ -101,7 +101,7 @@ $prop-css-calc: (
     @include assert {
       @include output {
         :root {
-          @include sbpm.loadBreakpoints($prop-only-tablet, $breakpoints);
+          @include sbpm.create-breakpoints($prop-only-tablet, $breakpoints);
         }
       }
 
@@ -123,7 +123,7 @@ $prop-css-calc: (
     @include assert {
       @include output {
         :root {
-          @include sbpm.loadBreakpoints($prop-full, $breakpoints);
+          @include sbpm.create-breakpoints($prop-full, $breakpoints);
         }
       }
 
@@ -151,7 +151,7 @@ $prop-css-calc: (
     @include assert {
       @include output {
         :root {
-          @include sbpm.loadBreakpoints($prop-full, $breakpoints, $mobile-first: false);
+          @include sbpm.create-breakpoints($prop-full, $breakpoints, $mobile-first: false);
         }
       }
 
@@ -179,7 +179,7 @@ $prop-css-calc: (
     @include assert {
       @include output {
         :root {
-          @include sbpm.loadBreakpoints($prop-non-standard-base, $breakpoints, $base-name: base);
+          @include sbpm.create-breakpoints($prop-non-standard-base, $breakpoints, $base-name: base);
         }
       }
 
@@ -191,11 +191,11 @@ $prop-css-calc: (
     }
   }
 
-  @include it('Creates mobile first media queries for multiple custom properties (all sizes used)') {
+  @include it('Outputs mobile first media queries for multiple custom properties (all sizes used)') {
     @include assert {
       @include output {
         :root {
-          @include sbpm.loadBreakpoints($props-full-equal, $breakpoints);
+          @include sbpm.create-breakpoints($props-full-equal, $breakpoints);
         }
       }
 
@@ -225,11 +225,11 @@ $prop-css-calc: (
     }
   }
 
-  @include it('Creates mobile first media queries for multiple custom properties (not all sizes used with all properties)') {
+  @include it('Outputs mobile first media queries for multiple custom properties (not all sizes used with all properties)') {
     @include assert {
       @include output {
         :root {
-          @include sbpm.loadBreakpoints($props-full-non-equal, $breakpoints);
+          @include sbpm.create-breakpoints($props-full-non-equal, $breakpoints);
         }
       }
 
@@ -261,7 +261,7 @@ $prop-css-calc: (
     @include assert {
       @include output {
         :root {
-          @include sbpm.loadBreakpoints($prop-sass-calc, $breakpoints);
+          @include sbpm.create-breakpoints($prop-sass-calc, $breakpoints);
         }
       }
 
@@ -277,7 +277,7 @@ $prop-css-calc: (
     @include assert {
       @include output {
         :root {
-          @include sbpm.loadBreakpoints($prop-css-calc, $breakpoints);
+          @include sbpm.create-breakpoints($prop-css-calc, $breakpoints);
         }
       }
 
