@@ -1,10 +1,6 @@
 @use 'sass:map';
 @use '../node_modules/sass-breakpoint-maps/src/sbpm';
 
-.test {
-  width: 100%;
-}
-
 $breaking_props: (
   margin-top: (
     regular: 1rem,
