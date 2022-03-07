@@ -30,7 +30,7 @@ Define a Sass map containing your project's breakpoints, both the map and breakp
 
 $breakpoints: (
   tablet: 1060px,
-  mobile: 870px
+  desktop: 870px
 );
 ```
 
