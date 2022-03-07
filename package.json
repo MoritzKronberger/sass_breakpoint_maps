@@ -21,6 +21,7 @@
   "author": "Moritz Kronberger",
   "license": "MIT",
   "devDependencies": {
-    "sass": "^1.49.9"
+    "sass": "^1.49.9",
+    "sass-true": "^6.1.0"
   }
 }
